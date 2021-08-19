@@ -1,38 +1,23 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: configserver
-  namespace: techacademy
-  labels:
-    app: configserver
-spec:
-  ports:
-  - port: 8080
-    name: web
-  selector:
-    app: configserver
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: configserver
-  name: configserver
+    app: customer
+  name: customer
   namespace: techacademy 
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: configserver
+      app: customer
   template:
     metadata:
       labels:
-        app: configserver
+        app: customer
     spec:
       containers:
-      - name: nginx
-        image: registry.digitalocean.com/k8s-techacademy/cfg-server:latest
+      - name: customer
+        image: registry.digitalocean.com/k8s-techacademy/customer:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -53,10 +38,9 @@ spec:
         env:
         - name: PORT
           value: "8080"
-        - name: PRIVATE_KEY
-          valueFrom:
-            secretKeyRef:
-              key: rsa_key.pub
-              name: github-key
+        - name: CONFIGSERVER
+          value: http://configserver.techacademy.svc.cluster.local:8080/config
+        - name: PROFILE
+          value: dev 
 
         
