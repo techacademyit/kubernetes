@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: config-server
+  name: config-server
+  namespace: techacademy 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+    spec:
+      containers:
+      - name: nginx
+        image: registry.digitalocean.com/k8s-techacademy/cfg-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /actuator/health
+            port: 8080
+            scheme: HTTP
+        
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /actuator/health
+            port: 8080
+            scheme: HTTP
+        env:
+        - name: PORT
+          value: "8080"
+        - name: PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: rsa_key.pub
+              name: github-key
+
+        

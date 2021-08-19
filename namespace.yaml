@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+  labels:
+    env: develop
+    kubernetes.io/metadata.name: techacademy
+  name: techacademy

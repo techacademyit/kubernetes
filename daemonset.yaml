@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: dnginx
+  namespace: techacademy
+  labels:
+    app: dnginx
+spec:
+  selector:
+    matchLabels:
+      app: dnginx
+  template:
+    metadata:
+      labels:
+        app: dnginx
+    spec:
+      containers:
+      - env:
+        - name: PROFILE
+          value: prd
+        image: nginx
+        imagePullPolicy: Always
+        name: dnginx
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
