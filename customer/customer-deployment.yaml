@@ -16,6 +16,8 @@ spec:
         app: customer
     spec:
       containers:
+      - image: nginx
+        name: nginx      
       - name: customer
         image: registry.digitalocean.com/k8s-techacademy/customer:latest
         imagePullPolicy: Always
